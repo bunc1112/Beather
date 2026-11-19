@@ -68,6 +68,8 @@ object Store {
         p(ctx).edit().remove("cache_$id").apply()
     }
 
+    fun location(ctx: Context, id: String): SavedLocation? = locations(ctx).firstOrNull { it.id == id }
+
     // ---- Widget -> location mapping -------------------------------------
 
     fun widgetLocation(ctx: Context, widgetId: Int): SavedLocation? {
