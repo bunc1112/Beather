@@ -1,7 +1,9 @@
 package hr.beather.ui
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,8 +31,13 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { finish() }
+    }
 
+    // Rebuilt on every return, so calendars appear right after enabling sync in Outlook.
+    override fun onResume() {
+        super.onResume()
         build()
+        WidgetRenderer.updateAll(this)
     }
 
     private val calendarPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -86,8 +93,21 @@ class SettingsActivity : AppCompatActivity() {
             if (cals.isEmpty()) ui.hint(getString(R.string.no_calendars))
             val labels = listOf(getString(R.string.row_google), getString(R.string.row_outlook), getString(R.string.row_hide))
             val sources = listOf(CalSource.GOOGLE, CalSource.OUTLOOK, CalSource.HIDDEN)
+            val hasOutlook = cals.any { Calendars.source(this, it) == CalSource.OUTLOOK }
+            if (!hasOutlook) {
+                ui.hint(getString(R.string.no_outlook_calendars))
+                if (Calendars.outlookInstalled(this)) {
+                    ui.button(getString(R.string.open_outlook)) {
+                        packageManager.getLaunchIntentForPackage(Calendars.OUTLOOK_PACKAGE)?.let { startActivity(it) }
+                    }
+                }
+                ui.button(getString(R.string.open_account_sync)) {
+                    runCatching { startActivity(Intent(Settings.ACTION_SYNC_SETTINGS)) }
+                }
+            }
             cals.forEach { cal ->
                 ui.label("${cal.name}  ·  ${cal.account}")
+                ui.hint(getString(R.string.calendar_info, cal.accountType, Calendars.countUpcoming(this, cal.id)))
                 ui.choice(labels, sources.indexOf(Calendars.source(this, cal))) { i ->
                     Store.setCalendarSource(this, cal.id, sources[i])
                     WidgetRenderer.updateAll(this)

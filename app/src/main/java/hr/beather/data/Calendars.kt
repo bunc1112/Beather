@@ -59,7 +59,7 @@ object Calendars {
         runCatching {
             ctx.contentResolver.query(
                 CalendarContract.Calendars.CONTENT_URI, projection,
-                "${CalendarContract.Calendars.VISIBLE} = 1", null,
+                null, null,
                 "${CalendarContract.Calendars.ACCOUNT_NAME} ASC",
             )?.use { c ->
                 while (c.moveToNext()) {
@@ -75,6 +75,24 @@ object Calendars {
         }
         return out
     }
+
+    /** Number of events in a calendar over the next [days] days (shown in Settings to help diagnose sync). */
+    fun countUpcoming(ctx: Context, calendarId: Long, days: Int = 14): Int {
+        if (!hasPermission(ctx)) return 0
+        val now = System.currentTimeMillis()
+        val uri = CalendarContract.Instances.CONTENT_URI.buildUpon().also {
+            ContentUris.appendId(it, now)
+            ContentUris.appendId(it, now + days * 24 * 3600_000L)
+        }.build()
+        return runCatching {
+            ctx.contentResolver.query(
+                uri, arrayOf(CalendarContract.Instances._ID),
+                "${CalendarContract.Instances.CALENDAR_ID} = ?", arrayOf(calendarId.toString()), null,
+            )?.use { it.count } ?: 0
+        }.getOrDefault(0)
+    }
+
+    fun outlookInstalled(ctx: Context) = ctx.packageManager.getLaunchIntentForPackage(OUTLOOK_PACKAGE) != null
 
     /** Best guess for which row a calendar belongs to. The user can override it in Settings. */
     fun autoSource(cal: DeviceCalendar): CalSource {
