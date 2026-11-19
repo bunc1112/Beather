@@ -51,6 +51,15 @@ class UiKit(private val ctx: Context, private val root: LinearLayout) {
         })
     }
 
+    fun button(label: String, onClick: () -> Unit) {
+        root.addView(com.google.android.material.button.MaterialButton(ctx).apply {
+            text = label
+            setOnClickListener { onClick() }
+        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+            marginStart = pad; topMargin = dp(4); bottomMargin = dp(4)
+        })
+    }
+
     /** Single-choice chips. */
     fun choice(options: List<String>, selected: Int, onSelect: (Int) -> Unit): ChipGroup {
         val group = ChipGroup(ctx).apply {

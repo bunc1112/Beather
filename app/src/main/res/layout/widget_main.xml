@@ -29,6 +29,18 @@
             <ImageView android:id="@+id/refresh" android:layout_width="28dp" android:layout_height="28dp" android:scaleType="fitCenter" android:contentDescription="@null" android:padding="5dp" android:src="@drawable/ic_refresh"/>
         </LinearLayout>
 
+        <LinearLayout android:id="@+id/cal_g_row" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:gravity="center_vertical" android:orientation="horizontal" android:visibility="gone">
+            <ImageView android:id="@+id/cal_g_icon" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:contentDescription="@null" android:src="@drawable/ic_event" android:layout_marginEnd="7dp"/>
+            <TextView android:id="@+id/cal_g_text" android:layout_height="wrap_content" android:text="" android:textColor="#FFFFFF" android:textSize="15sp" android:includeFontPadding="false" android:shadowColor="#80000000" android:shadowDy="1" android:shadowRadius="3" android:layout_width="0dp" android:layout_weight="1" android:maxLines="1" android:ellipsize="end"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/cal_o_row" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="3dp" android:gravity="center_vertical" android:orientation="horizontal" android:visibility="gone">
+            <ImageView android:id="@+id/cal_o_icon" android:layout_width="15dp" android:layout_height="15dp" android:scaleType="fitCenter" android:contentDescription="@null" android:src="@drawable/ic_event" android:layout_marginEnd="7dp"/>
+            <TextView android:id="@+id/cal_o_text" android:layout_height="wrap_content" android:text="" android:textColor="#FFFFFF" android:textSize="15sp" android:includeFontPadding="false" android:shadowColor="#80000000" android:shadowDy="1" android:shadowRadius="3" android:layout_width="0dp" android:layout_weight="1" android:maxLines="1" android:ellipsize="end"/>
+        </LinearLayout>
+
         <LinearLayout android:id="@+id/main_row" android:layout_width="match_parent" android:layout_height="wrap_content"
             android:layout_marginTop="2dp" android:gravity="center_vertical" android:orientation="horizontal">
             <LinearLayout android:id="@+id/clock_group" android:layout_width="0dp" android:layout_height="wrap_content"

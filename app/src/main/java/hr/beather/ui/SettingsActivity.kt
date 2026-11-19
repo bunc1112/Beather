@@ -1,12 +1,16 @@
 package hr.beather.ui
 
+import android.Manifest
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import hr.beather.R
+import hr.beather.data.CalSource
+import hr.beather.data.Calendars
 import hr.beather.data.OpenMeteo
 import hr.beather.data.Store
 import hr.beather.data.Units
@@ -26,7 +30,17 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbar.setNavigationOnClickListener { finish() }
 
-        val ui = UiKit(this, findViewById<LinearLayout>(R.id.options))
+        build()
+    }
+
+    private val calendarPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        build(); WidgetRenderer.updateAll(this)
+    }
+
+    private fun build() {
+        val options = findViewById<LinearLayout>(R.id.options)
+        options.removeAllViews()
+        val ui = UiKit(this, options)
 
         ui.section(getString(R.string.forecast_model))
         val models = OpenMeteo.MODELS
@@ -61,6 +75,26 @@ class SettingsActivity : AppCompatActivity() {
             RefreshWorker.reschedule(this)
         }
         ui.hint(getString(R.string.refresh_hint))
+
+        // ---- Calendars: which row each calendar goes in ----
+        ui.section(getString(R.string.calendars))
+        if (!Calendars.hasPermission(this)) {
+            ui.hint(getString(R.string.calendar_permission_hint))
+            ui.button(getString(R.string.allow_calendar)) { calendarPermission.launch(Manifest.permission.READ_CALENDAR) }
+        } else {
+            val cals = Calendars.list(this)
+            if (cals.isEmpty()) ui.hint(getString(R.string.no_calendars))
+            val labels = listOf(getString(R.string.row_google), getString(R.string.row_outlook), getString(R.string.row_hide))
+            val sources = listOf(CalSource.GOOGLE, CalSource.OUTLOOK, CalSource.HIDDEN)
+            cals.forEach { cal ->
+                ui.label("${cal.name}  ·  ${cal.account}")
+                ui.choice(labels, sources.indexOf(Calendars.source(this, cal))) { i ->
+                    Store.setCalendarSource(this, cal.id, sources[i])
+                    WidgetRenderer.updateAll(this)
+                }
+            }
+        }
+        ui.hint(getString(R.string.outlook_sync_hint))
     }
 
     private fun unitsChanged() {

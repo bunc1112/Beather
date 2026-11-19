@@ -39,7 +39,8 @@ class BeatherWidgetProvider : AppWidgetProvider() {
         super.onReceive(ctx, intent)
         when (intent.action) {
             ACTION_REFRESH -> RefreshWorker.refreshNow(ctx)
-            AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED -> WidgetRenderer.updateAll(ctx)
+            AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED,
+            Intent.ACTION_PROVIDER_CHANGED -> WidgetRenderer.updateAll(ctx)
         }
     }
 

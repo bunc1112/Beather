@@ -1,5 +1,6 @@
 package hr.beather.ui
 
+import android.Manifest
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +9,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
 import hr.beather.R
+import hr.beather.data.Calendars
 import hr.beather.data.Store
 import hr.beather.data.WeatherRepository
 import hr.beather.data.WidgetPrefs
@@ -33,6 +36,10 @@ class WidgetConfigActivity : AppCompatActivity() {
 
     private lateinit var previewFrame: FrameLayout
     private lateinit var options: LinearLayout
+
+    private val calendarPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        buildOptionsKeepScroll(); updatePreview()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,6 +143,18 @@ class WidgetConfigActivity : AppCompatActivity() {
         ui.slider(getString(R.string.days_count), 3, 7, 1, p.days) { v -> update { copy(days = v) } }
         ui.switch(getString(R.string.show_updated), p.showUpdated) { on -> update { copy(showUpdated = on) } }
         ui.switch(getString(R.string.show_source), p.showSource) { on -> update { copy(showSource = on) } }
+
+        // ---- Calendar ----
+        ui.section(getString(R.string.cfg_calendar))
+        if (!Calendars.hasPermission(this)) {
+            ui.hint(getString(R.string.calendar_permission_hint))
+            ui.button(getString(R.string.allow_calendar)) { calendarPermission.launch(Manifest.permission.READ_CALENDAR) }
+        }
+        ui.switch(getString(R.string.show_google), p.showGoogle) { on -> update { copy(showGoogle = on) } }
+        ui.switch(getString(R.string.show_outlook), p.showOutlook) { on -> update { copy(showOutlook = on) } }
+        ui.slider(getString(R.string.cal_days), 1, 14, 1, p.calDays, { getString(R.string.n_days, it) }) { v -> update { copy(calDays = v) } }
+        ui.slider(getString(R.string.cal_events), 1, 3, 1, p.calEvents) { v -> update { copy(calEvents = v) } }
+        ui.hint(getString(R.string.calendar_assign_hint))
 
         // ---- Clock ----
         ui.section(getString(R.string.cfg_clock))

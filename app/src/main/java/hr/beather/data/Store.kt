@@ -96,6 +96,12 @@ object Store {
     fun windUnit(ctx: Context): String = p(ctx).getString("wind", Units.WIND_KMH) ?: Units.WIND_KMH
     fun setWindUnit(ctx: Context, unit: String) = p(ctx).edit().putString("wind", unit).apply()
 
+    fun calendarSource(ctx: Context, calendarId: Long): CalSource? =
+        p(ctx).getString("cal_$calendarId", null)?.let { runCatching { CalSource.valueOf(it) }.getOrNull() }
+
+    fun setCalendarSource(ctx: Context, calendarId: Long, source: CalSource) =
+        p(ctx).edit().putString("cal_$calendarId", source.name).apply()
+
     fun refreshMinutes(ctx: Context) = p(ctx).getInt("refresh", 30)
     fun setRefreshMinutes(ctx: Context, min: Int) = p(ctx).edit().putInt("refresh", min).apply()
 

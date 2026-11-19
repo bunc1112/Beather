@@ -120,4 +120,19 @@
     <string name="short_date_format">d.M.</string>
     <string-array name="clock_fonts"><item>Tanki</item><item>Lagani</item><item>Obični</item><item>Debeli</item></string-array>
     <string-array name="corner_names"><item>Ravni</item><item>Mali</item><item>Zaobljeni</item><item>Jako zaobljeni</item></string-array>
+    <string name="cfg_calendar">Kalendar</string>
+    <string name="calendar_permission_hint">Beatheru treba pristup kalendaru za prikaz Google i Outlook događaja.</string>
+    <string name="allow_calendar">Dopusti pristup kalendaru</string>
+    <string name="show_google">Red Google kalendara</string>
+    <string name="show_outlook">Red Outlooka</string>
+    <string name="cal_days">Unaprijed</string>
+    <string name="n_days">%1$d dana</string>
+    <string name="cal_events">Događaja po redu</string>
+    <string name="calendar_assign_hint">Koji kalendar ide u koji red birate u Postavke → Kalendari.</string>
+    <string name="calendars">Kalendari</string>
+    <string name="no_calendars">Na mobitelu nema kalendara.</string>
+    <string name="row_google">Google red</string>
+    <string name="row_outlook">Outlook red</string>
+    <string name="row_hide">Sakrij</string>
+    <string name="outlook_sync_hint">Outlook događaji prikazuju se samo ako ih aplikacija Outlook sinkronizira s mobitelom: Outlook → Postavke → vaš račun → uključite Sinkroniziraj kalendare.</string>
 </resources>

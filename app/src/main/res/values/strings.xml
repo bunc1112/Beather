@@ -122,4 +122,19 @@
     <string name="short_date_format" translatable="false">MMM d</string>
     <string-array name="clock_fonts"><item>Thin</item><item>Light</item><item>Regular</item><item>Bold</item></string-array>
     <string-array name="corner_names"><item>Square</item><item>Small</item><item>Round</item><item>Extra round</item></string-array>
+    <string name="cfg_calendar">Calendar</string>
+    <string name="calendar_permission_hint">Beather needs calendar access to show your Google and Outlook events.</string>
+    <string name="allow_calendar">Allow calendar access</string>
+    <string name="show_google">Google Calendar row</string>
+    <string name="show_outlook">Outlook row</string>
+    <string name="cal_days">Look ahead</string>
+    <string name="n_days">%1$d days</string>
+    <string name="cal_events">Events per row</string>
+    <string name="calendar_assign_hint">Choose which calendar goes in which row under app Settings → Calendars.</string>
+    <string name="calendars">Calendars</string>
+    <string name="no_calendars">No calendars found on this phone.</string>
+    <string name="row_google">Google row</string>
+    <string name="row_outlook">Outlook row</string>
+    <string name="row_hide">Hide</string>
+    <string name="outlook_sync_hint">Outlook events show only if the Outlook app syncs them to the phone: Outlook → Settings → your account → turn on Sync calendars.</string>
 </resources>

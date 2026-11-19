@@ -14,6 +14,8 @@ import android.view.Gravity
 import android.view.View
 import android.widget.RemoteViews
 import hr.beather.R
+import hr.beather.data.CalSource
+import hr.beather.data.Calendars
 import hr.beather.data.Forecast
 import hr.beather.data.OpenMeteo
 import hr.beather.data.SavedLocation
@@ -55,6 +57,7 @@ object WidgetRenderer {
     // Text views with their base size (sp). Primary = main text colour, secondary = dimmed, accent = accent colour.
     private val MAIN_PRIMARY: List<Pair<Int, Float>> = buildList {
         add(R.id.loc_name to 17f); add(R.id.alarm_text to 15f); add(R.id.date_text to 15f)
+        add(R.id.cal_g_text to 15f); add(R.id.cal_o_text to 15f)
         CLOCKS.forEach { add(it to 60f) }
         add(R.id.cur_temp to 48f); add(R.id.cur_max to 18f); add(R.id.cur_desc to 17f)
         HOUR_TEMP.forEach { add(it to 13f) }
@@ -186,6 +189,10 @@ object WidgetRenderer {
         v.setViewVisibility(R.id.header, if (p.showLocation || alarm != null || p.showUpdated) View.VISIBLE else View.GONE)
         fc?.let { v.setTextViewText(R.id.updated, DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(it.fetchedAt))) }
 
+        // ---- Calendar rows: Google on one, Outlook on the other ----
+        fillCalendar(ctx, v, id, p, CalSource.GOOGLE, p.showGoogle, R.id.cal_g_row, R.id.cal_g_icon, R.id.cal_g_text)
+        fillCalendar(ctx, v, id, p, CalSource.OUTLOOK, p.showOutlook, R.id.cal_o_row, R.id.cal_o_icon, R.id.cal_o_text)
+
         // ---- Clock & date ----
         CLOCKS.forEachIndexed { i, cid ->
             v.setViewVisibility(cid, if (p.showClock && i == p.clockFont) View.VISIBLE else View.GONE)
@@ -263,6 +270,24 @@ object WidgetRenderer {
             c.station?.let { append(" · DHMZ ").append(it.name).append(" ").append(it.distanceKm.roundToInt()).append(" km") }
         })
         return v
+    }
+
+    private fun fillCalendar(
+        ctx: Context, v: RemoteViews, id: Int, p: WidgetPrefs, source: CalSource, show: Boolean,
+        row: Int, icon: Int, text: Int,
+    ) {
+        val events = if (show) Calendars.upcoming(ctx, source, p.calDays, p.calEvents) else emptyList()
+        if (events.isEmpty()) {
+            v.setViewVisibility(row, View.GONE); return
+        }
+        v.setViewVisibility(row, View.VISIBLE)
+        val today = ctx.getString(R.string.today)
+        val tomorrow = ctx.getString(R.string.tomorrow)
+        v.setTextViewText(text, events.joinToString("   ·   ") { Calendars.format(ctx, it, today, tomorrow) })
+        v.setInt(icon, "setColorFilter", events.first().color or 0xFF000000.toInt())
+        val intent = Calendars.openIntent(ctx, source, events.first()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val code = id * 16 + if (source == CalSource.GOOGLE) 13 else 14
+        v.setOnClickPendingIntent(row, PendingIntent.getActivity(ctx, code, intent, flags()))
     }
 
     private fun nextAlarm(ctx: Context): String? {

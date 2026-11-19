@@ -16,6 +16,10 @@ data class WidgetPrefs(
     val showUpdated: Boolean = false,
     val showSource: Boolean = false,
     val days: Int = 5,          // 3..7
+    val showGoogle: Boolean = true,
+    val showOutlook: Boolean = true,
+    val calDays: Int = 7,       // look ahead 1..14 days
+    val calEvents: Int = 1,     // events per row 1..3
     val clockFont: Int = 0,     // 0 thin, 1 light, 2 regular, 3 bold
     // Background
     val skyBackground: Boolean = false,   // true = blue day / navy night gradient
@@ -34,7 +38,8 @@ data class WidgetPrefs(
         .put("loc", showLocation).put("clock", showClock).put("date", showDate).put("alarm", showAlarm)
         .put("desc", showDescription).put("details", showDetails).put("hourly", showHourly)
         .put("daysOn", showDays).put("updated", showUpdated).put("source", showSource)
-        .put("days", days).put("font", clockFont).put("sky", skyBackground).put("bg", bgColor)
+        .put("days", days).put("gcal", showGoogle).put("ocal", showOutlook)
+        .put("calDays", calDays).put("calEvents", calEvents).put("font", clockFont).put("sky", skyBackground).put("bg", bgColor)
         .put("opacity", opacity).put("corner", corner).put("text", textColor).put("accent", accentColor)
         .put("tscale", textScale).put("iscale", iconScale).put("clockAlarms", clockOpensAlarms)
         .toString()
@@ -46,9 +51,11 @@ data class WidgetPrefs(
         val PRESET_FULL = WidgetPrefs(
             showClock = false, showDate = false, showAlarm = false, showDetails = true,
             showHourly = true, showUpdated = true, showSource = true, skyBackground = true, opacity = 90,
+            showGoogle = false, showOutlook = false,
         )
         val PRESET_MINIMAL = WidgetPrefs(
             showClock = false, showDate = false, showAlarm = false, showDays = false, opacity = 0,
+            showGoogle = false, showOutlook = false,
         )
 
         fun fromJson(s: String?): WidgetPrefs {
@@ -67,6 +74,10 @@ data class WidgetPrefs(
                 showUpdated = o.optBoolean("updated", d.showUpdated),
                 showSource = o.optBoolean("source", d.showSource),
                 days = o.optInt("days", d.days).coerceIn(3, 7),
+                showGoogle = o.optBoolean("gcal", d.showGoogle),
+                showOutlook = o.optBoolean("ocal", d.showOutlook),
+                calDays = o.optInt("calDays", d.calDays).coerceIn(1, 14),
+                calEvents = o.optInt("calEvents", d.calEvents).coerceIn(1, 3),
                 clockFont = o.optInt("font", d.clockFont).coerceIn(0, 3),
                 skyBackground = o.optBoolean("sky", d.skyBackground),
                 bgColor = o.optInt("bg", d.bgColor),

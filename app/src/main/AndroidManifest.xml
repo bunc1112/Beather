@@ -5,6 +5,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
+    <queries>
+        <package android:name="com.microsoft.office.outlook" />
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="content" android:host="com.android.calendar" />
+        </intent>
+    </queries>
 
     <application
         android:name=".BeatherApp"
@@ -50,6 +59,10 @@
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.app.action.NEXT_ALARM_CLOCK_CHANGED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.PROVIDER_CHANGED" />
+                <data android:scheme="content" android:host="com.android.calendar" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"
