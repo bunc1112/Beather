@@ -102,6 +102,11 @@ object Store {
     fun setCalendarSource(ctx: Context, calendarId: Long, source: CalSource) =
         p(ctx).edit().putString("cal_$calendarId", source.name).apply()
 
+    fun autoUpdateCheck(ctx: Context) = p(ctx).getBoolean("autoUpdate", true)
+    fun setAutoUpdateCheck(ctx: Context, on: Boolean) = p(ctx).edit().putBoolean("autoUpdate", on).apply()
+    fun lastUpdateCheck(ctx: Context) = p(ctx).getLong("lastUpdateCheck", 0L)
+    fun setLastUpdateCheck(ctx: Context, t: Long) = p(ctx).edit().putLong("lastUpdateCheck", t).apply()
+
     fun refreshMinutes(ctx: Context) = p(ctx).getInt("refresh", 30)
     fun setRefreshMinutes(ctx: Context, min: Int) = p(ctx).edit().putInt("refresh", min).apply()
 

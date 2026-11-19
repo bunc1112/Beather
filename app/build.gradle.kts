@@ -3,6 +3,11 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+// CI build number = versionCode, so every GitHub build is an update of the previous one.
+val buildNumber = (System.getenv("GITHUB_RUN_NUMBER") ?: "1").toInt()
+// Permanent signing key (from GitHub secrets). Without it, builds fall back to the debug key.
+val keystoreFile = System.getenv("KEYSTORE_FILE")?.let { file(it) }?.takeIf { it.exists() }
+
 android {
     namespace = "hr.beather"
     compileSdk = 35
@@ -11,17 +16,31 @@ android {
         applicationId = "hr.beather"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "2.2"
+        versionCode = buildNumber
+        versionName = "2.3.$buildNumber"
+    }
+
+    signingConfigs {
+        if (keystoreFile != null) {
+            create("beather") {
+                storeFile = keystoreFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS") ?: "beather"
+                keyPassword = System.getenv("KEYSTORE_PASSWORD")
+            }
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            // Signed with the debug key so the CI-built APK installs directly.
-            // Replace with your own signing config before publishing to Play.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (keystoreFile != null) signingConfigs.getByName("beather")
+            else signingConfigs.getByName("debug")
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

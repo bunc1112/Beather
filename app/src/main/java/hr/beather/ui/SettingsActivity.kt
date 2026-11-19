@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.MaterialToolbar
+import hr.beather.BuildConfig
 import hr.beather.R
 import hr.beather.data.CalSource
 import hr.beather.data.Calendars
@@ -48,6 +49,11 @@ class SettingsActivity : AppCompatActivity() {
         val options = findViewById<LinearLayout>(R.id.options)
         options.removeAllViews()
         val ui = UiKit(this, options)
+
+        ui.section(getString(R.string.updates))
+        ui.label(getString(R.string.current_version, BuildConfig.VERSION_NAME))
+        ui.button(getString(R.string.check_updates)) { checkForUpdate(this, manual = true) }
+        ui.switch(getString(R.string.auto_update_check), Store.autoUpdateCheck(this)) { on -> Store.setAutoUpdateCheck(this, on) }
 
         ui.section(getString(R.string.forecast_model))
         val models = OpenMeteo.MODELS

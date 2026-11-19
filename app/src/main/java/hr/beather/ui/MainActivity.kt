@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         RefreshWorker.schedulePeriodic(this)
+        checkForUpdate(this, manual = false)
     }
 
     override fun onResume() {

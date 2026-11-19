@@ -141,4 +141,18 @@
     <string name="open_outlook">Open Outlook</string>
     <string name="open_account_sync">Android account sync settings</string>
     <string name="calendar_info">%1$s · %2$d events in the next 14 days</string>
+    <string name="updates">Updates</string>
+    <string name="current_version">Installed version: %1$s</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="auto_update_check">Check for updates automatically</string>
+    <string name="update_available">Update available</string>
+    <string name="update_message">Beather %1$s is available (you have %2$s). Install it now?</string>
+    <string name="update">Update</string>
+    <string name="later">Later</string>
+    <string name="up_to_date">You have the latest version</string>
+    <string name="update_check_failed">Couldn\'t check for updates – check your connection</string>
+    <string name="allow_installs_title">Allow updates</string>
+    <string name="allow_installs_message">To install updates, allow Beather to install apps. Turn on “Allow from this source”, come back and tap Update again.</string>
+    <string name="open_settings">Open settings</string>
+    <string name="downloading">Downloading… %1$d%%</string>
 </resources>
