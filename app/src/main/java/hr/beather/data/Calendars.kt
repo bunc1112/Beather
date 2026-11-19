@@ -23,7 +23,11 @@ data class DeviceCalendar(
     val account: String,
     val accountType: String,
     val color: Int,
-)
+    val accessLevel: Int,
+) {
+    /** Your own calendar (or one you can edit), as opposed to a colleague's shared one. */
+    val isOwn get() = accessLevel >= CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR
+}
 
 data class CalEvent(
     val eventId: Long,
@@ -54,6 +58,7 @@ object Calendars {
             CalendarContract.Calendars.ACCOUNT_NAME,
             CalendarContract.Calendars.ACCOUNT_TYPE,
             CalendarContract.Calendars.CALENDAR_COLOR,
+            CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL,
         )
         val out = mutableListOf<DeviceCalendar>()
         runCatching {
@@ -69,6 +74,7 @@ object Calendars {
                         account = c.getString(2) ?: "",
                         accountType = c.getString(3) ?: "",
                         color = c.getInt(4),
+                        accessLevel = c.getInt(5),
                     )
                 }
             }
@@ -101,6 +107,8 @@ object Calendars {
         val microsoft = listOf("outlook", "microsoft", "exchange", "office").any { it in type } ||
             MS_DOMAINS.any { it in account }
         return when {
+            // Colleagues' shared calendars come along with an Outlook work account – off by default.
+            microsoft && !cal.isOwn -> CalSource.HIDDEN
             microsoft -> CalSource.OUTLOOK
             type == "com.google" -> CalSource.GOOGLE
             else -> CalSource.HIDDEN

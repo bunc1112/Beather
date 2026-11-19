@@ -25,6 +25,8 @@ import kotlinx.coroutines.launch
 /** App-wide settings: forecast source, live stations, units, refresh interval. */
 class SettingsActivity : AppCompatActivity() {
 
+    private var showShared = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -111,7 +113,13 @@ class SettingsActivity : AppCompatActivity() {
                     runCatching { startActivity(Intent(Settings.ACTION_SYNC_SETTINGS)) }
                 }
             }
-            cals.forEach { cal ->
+            val shared = cals.count { !it.isOwn }
+            if (shared > 0) {
+                ui.switch(getString(R.string.show_shared_calendars, shared), showShared) { on ->
+                    showShared = on; build()
+                }
+            }
+            cals.filter { it.isOwn || showShared }.forEach { cal ->
                 ui.label("${cal.name}  ·  ${cal.account}")
                 ui.hint(getString(R.string.calendar_info, cal.accountType, Calendars.countUpcoming(this, cal.id)))
                 ui.choice(labels, sources.indexOf(Calendars.source(this, cal))) { i ->

@@ -155,4 +155,5 @@
     <string name="allow_installs_message">To install updates, allow Beather to install apps. Turn on “Allow from this source”, come back and tap Update again.</string>
     <string name="open_settings">Open settings</string>
     <string name="downloading">Downloading… %1$d%%</string>
+    <string name="show_shared_calendars">Show shared calendars (%1$d)</string>
 </resources>

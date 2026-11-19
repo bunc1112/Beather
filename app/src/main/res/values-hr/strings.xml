@@ -153,4 +153,5 @@
     <string name="allow_installs_message">Za instalaciju ažuriranja dopustite Beatheru instaliranje aplikacija. Uključite „Dopusti iz ovog izvora”, vratite se i ponovno dodirnite Ažuriraj.</string>
     <string name="open_settings">Otvori postavke</string>
     <string name="downloading">Preuzimanje… %1$d%%</string>
+    <string name="show_shared_calendars">Prikaži dijeljene kalendare (%1$d)</string>
 </resources>
