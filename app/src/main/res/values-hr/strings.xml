@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_desc">Vrijeme za Hrvatsku – ECMWF 9 km prognoza i mjerenja DHMZ postaja uživo</string>
+    <string name="main_hint">Vaša mjesta. Widget dodajte dugim pritiskom na početni zaslon → Widgeti → Beather.</string>
+    <string name="add_location">Dodaj lokaciju</string>
+    <string name="my_location">Moja lokacija</string>
+    <string name="choose_location">Odaberite lokaciju widgeta</string>
+    <string name="search_hint">Grad, otok, mjesto…</string>
+    <string name="only_croatia">Samo Hrvatska</string>
+    <string name="no_results">Nema rezultata</string>
+    <string name="no_location">Nema lokacije</string>
+    <string name="loading">Učitavanje…</string>
+    <string name="refresh">Osvježi</string>
+    <string name="refreshed">Prognoza ažurirana</string>
+    <string name="refresh_failed">Ažuriranje nije uspjelo – provjerite vezu</string>
+    <string name="forecast_model">Prognostički model</string>
+    <string name="use_stations">DHMZ postaje uživo</string>
+    <string name="delete">Obriši</string>
+    <string name="delete_q">Obrisati %1$s?</string>
+    <string name="perm_denied">Dozvola za lokaciju odbijena</string>
+    <string name="locating">Tražim vašu lokaciju…</string>
+    <string name="no_fix">Lokacija nije dostupna – je li uključena?</string>
+    <string name="today">Danas</string>
+    <string name="now">Sad</string>
+    <string name="feels_like">Osjećaj %1$s</string>
+    <string name="gusts">udari %1$d</string>
+    <string name="measured_at">Izmjereno: DHMZ %1$s (%2$d km)</string>
+    <string name="source_line">Prognoza: %1$s putem Open-Meteo</string>
+    <string name="wind_bura">Bura</string>
+    <string name="wind_jugo">Jugo</string>
+
+    <string name="wc_clear">Vedro</string>
+    <string name="wc_mainly_clear">Pretežno vedro</string>
+    <string name="wc_partly">Djelomično oblačno</string>
+    <string name="wc_overcast">Oblačno</string>
+    <string name="wc_fog">Magla</string>
+    <string name="wc_drizzle">Rosulja</string>
+    <string name="wc_freezing_drizzle">Ledena rosulja</string>
+    <string name="wc_rain_light">Slaba kiša</string>
+    <string name="wc_rain">Kiša</string>
+    <string name="wc_rain_heavy">Jaka kiša</string>
+    <string name="wc_freezing_rain">Ledena kiša</string>
+    <string name="wc_snow_light">Slab snijeg</string>
+    <string name="wc_snow">Snijeg</string>
+    <string name="wc_snow_heavy">Jak snijeg</string>
+    <string name="wc_snow_grains">Zrnati snijeg</string>
+    <string name="wc_showers_light">Slabi pljuskovi</string>
+    <string name="wc_showers">Pljuskovi</string>
+    <string name="wc_showers_heavy">Jaki pljuskovi</string>
+    <string name="wc_snow_showers">Snježni pljuskovi</string>
+    <string name="wc_storm">Grmljavina</string>
+    <string name="wc_storm_hail">Grmljavina s tučom</string>
+
+    <string-array name="wind_dirs">
+        <item>S</item><item>SI</item><item>I</item><item>JI</item>
+        <item>J</item><item>JZ</item><item>Z</item><item>SZ</item>
+    </string-array>
+</resources>

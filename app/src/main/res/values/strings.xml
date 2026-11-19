@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Beather</string>
+    <string name="widget_desc">Weather for Croatia – ECMWF 9 km forecast with live DHMZ station data</string>
+    <string name="main_hint">Your places. To add the widget: long-press the home screen → Widgets → Beather.</string>
+    <string name="add_location">Add location</string>
+    <string name="my_location">My location</string>
+    <string name="choose_location">Choose widget location</string>
+    <string name="search_hint">Town, island, village…</string>
+    <string name="only_croatia">Only Croatia</string>
+    <string name="no_results">No places found</string>
+    <string name="no_location">No location</string>
+    <string name="loading">Loading…</string>
+    <string name="refresh">Refresh</string>
+    <string name="refreshed">Forecast updated</string>
+    <string name="refresh_failed">Couldn\'t update – check your connection</string>
+    <string name="forecast_model">Forecast model</string>
+    <string name="use_stations">Use live DHMZ stations</string>
+    <string name="delete">Delete</string>
+    <string name="delete_q">Delete %1$s?</string>
+    <string name="perm_denied">Location permission denied</string>
+    <string name="locating">Finding your location…</string>
+    <string name="no_fix">Couldn\'t get a location fix – is location turned on?</string>
+    <string name="today">Today</string>
+    <string name="now">Now</string>
+    <string name="feels_like">Feels %1$s</string>
+    <string name="gusts">gusts %1$d</string>
+    <string name="measured_at">Measured now: DHMZ %1$s (%2$d km)</string>
+    <string name="source_line">Forecast: %1$s via Open-Meteo</string>
+    <string name="wind_bura">Bura</string>
+    <string name="wind_jugo">Jugo</string>
+
+    <string name="wc_clear">Clear</string>
+    <string name="wc_mainly_clear">Mostly clear</string>
+    <string name="wc_partly">Partly cloudy</string>
+    <string name="wc_overcast">Overcast</string>
+    <string name="wc_fog">Fog</string>
+    <string name="wc_drizzle">Drizzle</string>
+    <string name="wc_freezing_drizzle">Freezing drizzle</string>
+    <string name="wc_rain_light">Light rain</string>
+    <string name="wc_rain">Rain</string>
+    <string name="wc_rain_heavy">Heavy rain</string>
+    <string name="wc_freezing_rain">Freezing rain</string>
+    <string name="wc_snow_light">Light snow</string>
+    <string name="wc_snow">Snow</string>
+    <string name="wc_snow_heavy">Heavy snow</string>
+    <string name="wc_snow_grains">Snow grains</string>
+    <string name="wc_showers_light">Light showers</string>
+    <string name="wc_showers">Showers</string>
+    <string name="wc_showers_heavy">Heavy showers</string>
+    <string name="wc_snow_showers">Snow showers</string>
+    <string name="wc_storm">Thunderstorm</string>
+    <string name="wc_storm_hail">Thunderstorm with hail</string>
+    <string name="wc_unknown" translatable="false">—</string>
+
+    <string-array name="wind_dirs">
+        <item>N</item><item>NE</item><item>E</item><item>SE</item>
+        <item>S</item><item>SW</item><item>W</item><item>NW</item>
+    </string-array>
+</resources>
