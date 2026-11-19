@@ -12,6 +12,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import hr.beather.data.SavedLocation
 import hr.beather.data.Store
 import hr.beather.data.WeatherRepository
 import hr.beather.widget.BeatherWidgetProvider
@@ -23,8 +24,10 @@ class RefreshWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
     override suspend fun doWork(): Result {
         val ctx = applicationContext
         val mgr = AppWidgetManager.getInstance(ctx)
-        val ids = mgr.getAppWidgetIds(ComponentName(ctx, BeatherWidgetProvider::class.java))
-        val locations = ids.mapNotNull { Store.widgetLocation(ctx, it) }.distinctBy { it.id }
+        val ids: IntArray = mgr.getAppWidgetIds(ComponentName(ctx, BeatherWidgetProvider::class.java))
+        val locations: List<SavedLocation> = ids.toList()
+            .mapNotNull { widgetId: Int -> Store.widgetLocation(ctx, widgetId) }
+            .distinctBy { loc: SavedLocation -> loc.id }
 
         var failures = 0
         for (loc in locations) {
