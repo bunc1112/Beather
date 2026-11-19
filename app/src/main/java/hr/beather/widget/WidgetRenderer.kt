@@ -160,7 +160,7 @@ object WidgetRenderer {
         }
 
         v.setTextViewText(R.id.loc_name, loc?.name ?: ctx.getString(R.string.no_location))
-        return if (compact) fillCompact(ctx, v, fc) else fillMain(ctx, v, loc, fc, p)
+        return if (compact) fillCompact(ctx, v, fc) else fillMain(ctx, v, id, loc, fc, p)
     }
 
     private fun fillCompact(ctx: Context, v: RemoteViews, fc: Forecast?): RemoteViews {
@@ -176,7 +176,7 @@ object WidgetRenderer {
         return v
     }
 
-    private fun fillMain(ctx: Context, v: RemoteViews, loc: SavedLocation?, fc: Forecast?, p: WidgetPrefs): RemoteViews {
+    private fun fillMain(ctx: Context, v: RemoteViews, id: Int, loc: SavedLocation?, fc: Forecast?, p: WidgetPrefs): RemoteViews {
         val locale = Locale.getDefault()
 
         // ---- Header: location · next alarm · updated · refresh ----
