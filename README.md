@@ -28,4 +28,4 @@ You can switch models in the app menu: ECMWF IFS 9 km (default), Open-Meteo Best
 (`.github/workflows/build.yml`) builds the APK. Download it from the run's
 *Artifacts*, under **Beather-apk**.
 
-Requires Android 8.0+ (API 26). Before publishing to Google Play, replace the debug signing in `app/build.gradle.kts` with your own key.
+Requires Android 8.0+ (API 26). Release APKs are signed with a permanent key from the `KEYSTORE_BASE64` / `KEYSTORE_PASSWORD` repository secrets, so every build installs as an update. The app checks GitHub Releases for updates itself.
