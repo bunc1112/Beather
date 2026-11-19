@@ -51,11 +51,18 @@ class RefreshWorker(ctx: Context, params: WorkerParameters) : CoroutineWorker(ct
             .build()
 
         fun schedulePeriodic(ctx: Context) {
-            val req = PeriodicWorkRequestBuilder<RefreshWorker>(30, TimeUnit.MINUTES)
+            schedule(ctx, ExistingPeriodicWorkPolicy.KEEP)
+        }
+
+        /** Call after the refresh interval setting changes. */
+        fun reschedule(ctx: Context) = schedule(ctx, ExistingPeriodicWorkPolicy.UPDATE)
+
+        private fun schedule(ctx: Context, policy: ExistingPeriodicWorkPolicy) {
+            val minutes = Store.refreshMinutes(ctx).toLong().coerceAtLeast(15)
+            val req = PeriodicWorkRequestBuilder<RefreshWorker>(minutes, TimeUnit.MINUTES)
                 .setConstraints(network)
                 .build()
-            WorkManager.getInstance(ctx)
-                .enqueueUniquePeriodicWork(PERIODIC, ExistingPeriodicWorkPolicy.KEEP, req)
+            WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(PERIODIC, policy, req)
         }
 
         fun refreshNow(ctx: Context) {

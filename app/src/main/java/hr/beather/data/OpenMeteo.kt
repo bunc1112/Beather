@@ -14,6 +14,7 @@ object OpenMeteo {
 
     val MODELS = listOf(
         Model("ecmwf_ifs", "ECMWF IFS 9 km"),
+        Model(Yr.MODEL_ID, "Yr (MET Norway)"),
         Model("best_match", "Open-Meteo Best match"),
         Model("icon_seamless", "DWD ICON"),
         Model("ecmwf_aifs025_single", "ECMWF AIFS (AI)"),
@@ -27,10 +28,10 @@ object OpenMeteo {
             append("?latitude=").append(lat).append("&longitude=").append(lon)
             append("&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,")
             append("weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation")
-            append("&hourly=temperature_2m,weather_code,precipitation_probability,is_day")
+            append("&hourly=temperature_2m,weather_code,precipitation_probability,is_day,precipitation")
             append("&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,")
             append("precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,sunrise,sunset")
-            append("&timezone=auto&forecast_days=7&wind_speed_unit=kmh")
+            append("&timezone=auto&forecast_days=8&wind_speed_unit=kmh")
             if (model != "best_match") append("&models=").append(model)
         }
         return Http.get(url)

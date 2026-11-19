@@ -4,4 +4,9 @@
         <item name="colorPrimary">@color/beather_blue</item>
         <item name="colorSecondary">@color/beather_blue</item>
     </style>
+
+    <style name="Theme.Beather.Forecast" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/beather_blue</item>
+        <item name="android:windowBackground">@color/beather_blue_dark</item>
+    </style>
 </resources>

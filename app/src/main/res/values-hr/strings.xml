@@ -13,7 +13,7 @@
     <string name="refresh">Osvježi</string>
     <string name="refreshed">Prognoza ažurirana</string>
     <string name="refresh_failed">Ažuriranje nije uspjelo – provjerite vezu</string>
-    <string name="forecast_model">Prognostički model</string>
+    <string name="forecast_model">Izvor prognoze</string>
     <string name="use_stations">DHMZ postaje uživo</string>
     <string name="delete">Obriši</string>
     <string name="delete_q">Obrisati %1$s?</string>
@@ -23,7 +23,7 @@
     <string name="today">Danas</string>
     <string name="now">Sad</string>
     <string name="feels_like">Osjećaj %1$s</string>
-    <string name="gusts">udari %1$d</string>
+    <string name="gusts">udari %1$s</string>
     <string name="measured_at">Izmjereno: DHMZ %1$s (%2$d km)</string>
     <string name="source_line">Prognoza: %1$s putem Open-Meteo</string>
     <string name="wind_bura">Bura</string>
@@ -55,4 +55,69 @@
         <item>S</item><item>SI</item><item>I</item><item>JI</item>
         <item>J</item><item>JZ</item><item>Z</item><item>SZ</item>
     </string-array>
+    <string name="settings">Postavke</string>
+    <string name="customize_widget">Uredi widget</string>
+    <string name="customize_widgets">Uredi widgete</string>
+    <string name="add_widget">Dodaj widget na početni zaslon</string>
+    <string name="no_widgets">Još nemate Beather widget. Dodati ga na početni zaslon?</string>
+    <string name="widget_n">Widget %1$d — %2$s</string>
+    <string name="pin_unsupported">Vaš launcher ne podržava dodavanje iz aplikacije. Dugo pritisnite početni zaslon → Widgeti → Beather.</string>
+    <string name="save">Spremi</string>
+    <string name="custom_color">Vlastita boja (#RRGGBB)</string>
+    <string name="cfg_location">Lokacija</string>
+    <string name="add_location_chip">＋ Dodaj</string>
+    <string name="cfg_presets">Brzi stilovi</string>
+    <string name="cfg_presets_hint">Odaberite početni stil, a zatim sve prilagodite ispod.</string>
+    <string name="preset_clock">Sat + prognoza</string>
+    <string name="preset_full">Puna prognoza</string>
+    <string name="preset_minimal">Minimalno</string>
+    <string name="preview_normal">Normalna veličina</string>
+    <string name="preview_small">Mala veličina</string>
+    <string name="cfg_show">Što prikazati</string>
+    <string name="show_location">Naziv mjesta</string>
+    <string name="show_clock">Sat</string>
+    <string name="show_date">Datum</string>
+    <string name="show_alarm">Sljedeći alarm</string>
+    <string name="show_description">Opis vremena</string>
+    <string name="show_details">Osjećaj · vjetar · vlaga</string>
+    <string name="show_hourly">Prognoza po satima (12 h)</string>
+    <string name="show_days">Prognoza po danima</string>
+    <string name="days_count">Broj dana</string>
+    <string name="show_updated">Vrijeme ažuriranja + gumb osvježi</string>
+    <string name="show_source">Izvor podataka</string>
+    <string name="cfg_clock">Sat</string>
+    <string name="clock_font">Font sata</string>
+    <string name="clock_tap">Dodir na sat otvara</string>
+    <string name="tap_alarms">Alarme</string>
+    <string name="tap_forecast">Tjednu prognozu</string>
+    <string name="cfg_background">Pozadina</string>
+    <string name="bg_solid">Jednobojna</string>
+    <string name="bg_sky">Nebo (dan/noć)</string>
+    <string name="bg_color">Boja</string>
+    <string name="opacity">Neprozirnost</string>
+    <string name="opacity_hint">0% = potpuno prozirno</string>
+    <string name="corners">Kutovi</string>
+    <string name="cfg_text">Tekst i ikone</string>
+    <string name="text_color">Boja teksta</string>
+    <string name="accent_color">Boja naglaska (vjerojatnost kiše)</string>
+    <string name="text_size">Veličina teksta</string>
+    <string name="icon_size">Veličina ikona</string>
+    <string name="icon_size_hint">Veličina ikona zahtijeva Android 12 ili noviji.</string>
+    <string name="model_hint">ECMWF 9 km je u prosjeku najtočniji za Hrvatsku. Yr koristi prognozu MET Norway (ovdje temeljenu na ECMWF-u, uz njihovu obradu).</string>
+    <string name="live_data">Podaci uživo</string>
+    <string name="stations_hint">Prikazuje temperaturu koju upravo mjeri najbliža DHMZ postaja (unutar 15 km).</string>
+    <string name="units">Mjerne jedinice</string>
+    <string name="temperature">Temperatura</string>
+    <string name="wind_speed">Brzina vjetra</string>
+    <string name="knots">čvorovi</string>
+    <string name="refresh_every">Osvježavaj svakih</string>
+    <string name="minutes">%1$d min</string>
+    <string name="refresh_hint">Android može odgoditi osvježavanje radi štednje baterije.</string>
+    <string name="tomorrow">Sutra</string>
+    <string name="updated_at">Ažurirano %1$s</string>
+    <string name="wc_sleet">Susnježica</string>
+    <string name="date_format">EEEE, d. MMMM</string>
+    <string name="short_date_format">d.M.</string>
+    <string-array name="clock_fonts"><item>Tanki</item><item>Lagani</item><item>Obični</item><item>Debeli</item></string-array>
+    <string-array name="corner_names"><item>Ravni</item><item>Mali</item><item>Zaobljeni</item><item>Jako zaobljeni</item></string-array>
 </resources>

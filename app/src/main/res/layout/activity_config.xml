@@ -10,18 +10,30 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:title="@string/choose_location" />
+        app:title="@string/customize_widget" />
 
-    <ListView
-        android:id="@+id/config_list"
+    <FrameLayout
+        android:id="@+id/preview_frame"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:background="@drawable/preview_wall"
+        android:padding="12dp" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+        <LinearLayout
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
     <Button
-        android:id="@+id/config_add"
+        android:id="@+id/config_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/add_location" />
+        android:layout_margin="12dp"
+        android:text="@string/save" />
 </LinearLayout>

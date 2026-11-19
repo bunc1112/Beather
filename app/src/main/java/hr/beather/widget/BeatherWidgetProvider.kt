@@ -1,5 +1,6 @@
 package hr.beather.widget
 
+import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -36,7 +37,10 @@ class BeatherWidgetProvider : AppWidgetProvider() {
 
     override fun onReceive(ctx: Context, intent: Intent) {
         super.onReceive(ctx, intent)
-        if (intent.action == ACTION_REFRESH) RefreshWorker.refreshNow(ctx)
+        when (intent.action) {
+            ACTION_REFRESH -> RefreshWorker.refreshNow(ctx)
+            AlarmManager.ACTION_NEXT_ALARM_CLOCK_CHANGED -> WidgetRenderer.updateAll(ctx)
+        }
     }
 
     companion object {

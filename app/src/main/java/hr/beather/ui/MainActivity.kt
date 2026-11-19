@@ -1,6 +1,9 @@
 package hr.beather.ui
 
 import android.Manifest
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.Menu
@@ -16,21 +19,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import hr.beather.R
-import hr.beather.data.Forecast
-import hr.beather.data.OpenMeteo
 import hr.beather.data.SavedLocation
 import hr.beather.data.Store
-import hr.beather.data.WeatherCodes
-import hr.beather.data.WeatherCodes.deg
+import hr.beather.data.Units
 import hr.beather.data.WeatherRepository
+import hr.beather.widget.BeatherWidgetProvider
 import hr.beather.widget.WidgetRenderer
 import hr.beather.work.RefreshWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.format.TextStyle
-import java.util.Locale
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById<MaterialToolbar>(R.id.toolbar))
 
-        adapter = LocationAdapter(onClick = this::showForecast, onDelete = this::confirmDelete)
+        adapter = LocationAdapter(onClick = this::openForecast, onDelete = this::confirmDelete)
         findViewById<RecyclerView>(R.id.locations).apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = this@MainActivity.adapter
@@ -70,13 +68,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Units.load(this)
         reload()
-        // Fill in anything never fetched (e.g. the default Zagreb on first launch).
-        val missing = Store.locations(this).filter { WeatherRepository.cacheAgeMs(this, it) > 30 * 60 * 1000L }
-        if (missing.isNotEmpty()) refreshLocations(missing, quiet = true)
+        val stale = Store.locations(this).filter { WeatherRepository.cacheAgeMs(this, it) > 30 * 60 * 1000L }
+        if (stale.isNotEmpty()) refreshLocations(stale, quiet = true)
     }
 
     private fun reload() = adapter.submit(Store.locations(this))
+
+    private fun openForecast(loc: SavedLocation) {
+        startActivity(Intent(this, ForecastActivity::class.java).putExtra(ForecastActivity.EXTRA_LOCATION, loc.id))
+    }
 
     private fun onLocationAdded(loc: SavedLocation) {
         Store.addLocation(this, loc)
@@ -90,9 +92,7 @@ class MainActivity : AppCompatActivity() {
             for (l in list) if (runCatching { WeatherRepository.refresh(this@MainActivity, l) }.isSuccess) ok++
             reload()
             WidgetRenderer.updateAll(this@MainActivity)
-            if (!quiet || ok < list.size) {
-                toast(if (ok == list.size) R.string.refreshed else R.string.refresh_failed)
-            }
+            if (!quiet || ok < list.size) toast(if (ok == list.size) R.string.refreshed else R.string.refresh_failed)
         }
     }
 
@@ -124,80 +124,50 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun showForecast(loc: SavedLocation) {
-        val fc: Forecast = WeatherRepository.cached(this, loc) ?: run {
-            refreshLocations(listOf(loc), quiet = false); return
+    /** Lets the user restyle any placed widget from inside the app (works on every launcher). */
+    private fun customizeWidgets() {
+        val mgr = AppWidgetManager.getInstance(this)
+        val ids = mgr.getAppWidgetIds(ComponentName(this, BeatherWidgetProvider::class.java))
+        if (ids.isEmpty()) {
+            MaterialAlertDialogBuilder(this)
+                .setMessage(R.string.no_widgets)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.add_widget) { _, _ -> pinWidget() }
+                .show()
+            return
         }
-        val locale = Locale.getDefault()
-        val c = fc.current
-        val text = buildString {
-            append(deg(c.temp)).append("  ").append(WeatherCodes.describe(this@MainActivity, c.code)).append('\n')
-            c.feelsLike?.let { append(getString(R.string.feels_like, deg(it))).append("   ") }
-            c.humidity?.let { append("💧").append(it).append("%") }
-            append('\n')
-            if (c.wind != null) {
-                append("💨 ")
-                c.windDir?.let { append(WeatherCodes.windDir(this@MainActivity, it)).append(' ') }
-                append(c.wind.roundToInt()).append(" km/h")
-                c.gusts?.let { append(" (").append(getString(R.string.gusts, it.roundToInt())).append(")") }
-                append('\n')
-            }
-            c.station?.let {
-                append(getString(R.string.measured_at, it.name, it.distanceKm.roundToInt())).append('\n')
-            }
-            append('\n')
-            fc.days.forEachIndexed { i, d ->
-                val name = if (i == 0) getString(R.string.today)
-                else d.date.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).replaceFirstChar { it.titlecase(locale) }
-                append(name.padEnd(6)).append("  ")
-                append(deg(d.max)).append(" / ").append(deg(d.min)).append("  ")
-                append(WeatherCodes.describe(this@MainActivity, d.code))
-                val rain = listOfNotNull(
-                    d.precip?.takeIf { it >= 0.1 }?.let { "%.1f mm".format(locale, it) },
-                    d.pop?.takeIf { it >= 10 }?.let { "$it%" },
-                )
-                if (rain.isNotEmpty()) append(" · ").append(rain.joinToString(" "))
-                append('\n')
-            }
-            append('\n').append(getString(R.string.source_line, OpenMeteo.label(fc.model)))
-        }
+        val labels = ids.mapIndexed { i, id ->
+            getString(R.string.widget_n, i + 1, Store.widgetLocation(this, id)?.name ?: "—")
+        }.toTypedArray()
         MaterialAlertDialogBuilder(this)
-            .setTitle(loc.name)
-            .setMessage(text)
-            .setPositiveButton(android.R.string.ok, null)
+            .setTitle(R.string.customize_widgets)
+            .setItems(labels) { _, which -> openWidgetDesigner(ids[which]) }
             .show()
+    }
+
+    private fun openWidgetDesigner(widgetId: Int) {
+        startActivity(Intent(this, WidgetConfigActivity::class.java).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
+    }
+
+    private fun pinWidget() {
+        val mgr = AppWidgetManager.getInstance(this)
+        if (mgr.isRequestPinAppWidgetSupported) {
+            mgr.requestPinAppWidget(ComponentName(this, BeatherWidgetProvider::class.java), null, null)
+        } else {
+            toast(R.string.pin_unsupported)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        menu.findItem(R.id.action_stations).isChecked = Store.useStations(this)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_refresh -> {
-            refreshLocations(Store.locations(this), quiet = false); true
-        }
-        R.id.action_model -> {
-            val models = OpenMeteo.MODELS
-            val current = models.indexOfFirst { it.id == Store.model(this) }.coerceAtLeast(0)
-            MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.forecast_model)
-                .setSingleChoiceItems(models.map { it.label }.toTypedArray(), current) { d, which ->
-                    Store.setModel(this, models[which].id)
-                    d.dismiss()
-                    refreshLocations(Store.locations(this), quiet = false)
-                }
-                .show()
-            true
-        }
-        R.id.action_stations -> {
-            val on = !item.isChecked
-            item.isChecked = on
-            Store.setUseStations(this, on)
-            refreshLocations(Store.locations(this), quiet = false)
-            true
-        }
+        R.id.action_refresh -> { refreshLocations(Store.locations(this), quiet = false); true }
+        R.id.action_widgets -> { customizeWidgets(); true }
+        R.id.action_add_widget -> { pinWidget(); true }
+        R.id.action_settings -> { startActivity(Intent(this, SettingsActivity::class.java)); true }
         else -> super.onOptionsItemSelected(item)
     }
 

@@ -80,7 +80,22 @@ object Store {
         p(ctx).edit().putString("w_$widgetId", locationId).apply()
 
     fun removeWidget(ctx: Context, widgetId: Int) =
-        p(ctx).edit().remove("w_$widgetId").apply()
+        p(ctx).edit().remove("w_$widgetId").remove("ws_$widgetId").apply()
+
+    fun widgetPrefs(ctx: Context, widgetId: Int): WidgetPrefs =
+        WidgetPrefs.fromJson(p(ctx).getString("ws_$widgetId", null))
+
+    fun setWidgetPrefs(ctx: Context, widgetId: Int, prefs: WidgetPrefs) =
+        p(ctx).edit().putString("ws_$widgetId", prefs.toJson()).apply()
+
+    fun fahrenheit(ctx: Context) = p(ctx).getBoolean("fahrenheit", false)
+    fun setFahrenheit(ctx: Context, on: Boolean) = p(ctx).edit().putBoolean("fahrenheit", on).apply()
+
+    fun windUnit(ctx: Context): String = p(ctx).getString("wind", Units.WIND_KMH) ?: Units.WIND_KMH
+    fun setWindUnit(ctx: Context, unit: String) = p(ctx).edit().putString("wind", unit).apply()
+
+    fun refreshMinutes(ctx: Context) = p(ctx).getInt("refresh", 30)
+    fun setRefreshMinutes(ctx: Context, min: Int) = p(ctx).edit().putInt("refresh", min).apply()
 
     // ---- Settings ---------------------------------------------------------
 

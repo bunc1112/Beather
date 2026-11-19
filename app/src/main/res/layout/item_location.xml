@@ -12,7 +12,7 @@
     <FrameLayout
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:background="@drawable/widget_bg_day">
+        android:background="@drawable/bg_sky_day_r24">
         <ImageView
             android:id="@+id/item_icon"
             android:layout_width="36dp"

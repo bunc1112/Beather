@@ -14,7 +14,7 @@
     <string name="refresh">Refresh</string>
     <string name="refreshed">Forecast updated</string>
     <string name="refresh_failed">Couldn\'t update – check your connection</string>
-    <string name="forecast_model">Forecast model</string>
+    <string name="forecast_model">Forecast source</string>
     <string name="use_stations">Use live DHMZ stations</string>
     <string name="delete">Delete</string>
     <string name="delete_q">Delete %1$s?</string>
@@ -24,7 +24,7 @@
     <string name="today">Today</string>
     <string name="now">Now</string>
     <string name="feels_like">Feels %1$s</string>
-    <string name="gusts">gusts %1$d</string>
+    <string name="gusts">gusts %1$s</string>
     <string name="measured_at">Measured now: DHMZ %1$s (%2$d km)</string>
     <string name="source_line">Forecast: %1$s via Open-Meteo</string>
     <string name="wind_bura">Bura</string>
@@ -57,4 +57,69 @@
         <item>N</item><item>NE</item><item>E</item><item>SE</item>
         <item>S</item><item>SW</item><item>W</item><item>NW</item>
     </string-array>
+    <string name="settings">Settings</string>
+    <string name="customize_widget">Customize widget</string>
+    <string name="customize_widgets">Customize widgets</string>
+    <string name="add_widget">Add widget to home screen</string>
+    <string name="no_widgets">You have no Beather widget yet. Add one to your home screen?</string>
+    <string name="widget_n">Widget %1$d — %2$s</string>
+    <string name="pin_unsupported">Your launcher can\'t add widgets from apps. Long-press the home screen → Widgets → Beather.</string>
+    <string name="save">Save</string>
+    <string name="custom_color">Custom colour (#RRGGBB)</string>
+    <string name="cfg_location">Location</string>
+    <string name="add_location_chip">＋ Add</string>
+    <string name="cfg_presets">Quick styles</string>
+    <string name="cfg_presets_hint">Pick a starting point, then fine-tune everything below.</string>
+    <string name="preset_clock">Clock + forecast</string>
+    <string name="preset_full">Full forecast</string>
+    <string name="preset_minimal">Minimal</string>
+    <string name="preview_normal">Normal size</string>
+    <string name="preview_small">Small size</string>
+    <string name="cfg_show">What to show</string>
+    <string name="show_location">Location name</string>
+    <string name="show_clock">Clock</string>
+    <string name="show_date">Date</string>
+    <string name="show_alarm">Next alarm</string>
+    <string name="show_description">Weather description</string>
+    <string name="show_details">Feels like · wind · humidity</string>
+    <string name="show_hourly">Hourly forecast (12 h)</string>
+    <string name="show_days">Daily forecast</string>
+    <string name="days_count">Number of days</string>
+    <string name="show_updated">Update time + refresh button</string>
+    <string name="show_source">Data source</string>
+    <string name="cfg_clock">Clock</string>
+    <string name="clock_font">Clock font</string>
+    <string name="clock_tap">Tapping the clock opens</string>
+    <string name="tap_alarms">Alarms</string>
+    <string name="tap_forecast">Week forecast</string>
+    <string name="cfg_background">Background</string>
+    <string name="bg_solid">Solid colour</string>
+    <string name="bg_sky">Sky (day/night)</string>
+    <string name="bg_color">Colour</string>
+    <string name="opacity">Opacity</string>
+    <string name="opacity_hint">0% = fully transparent</string>
+    <string name="corners">Corners</string>
+    <string name="cfg_text">Text &amp; icons</string>
+    <string name="text_color">Text colour</string>
+    <string name="accent_color">Accent colour (rain chance)</string>
+    <string name="text_size">Text size</string>
+    <string name="icon_size">Icon size</string>
+    <string name="icon_size_hint">Icon size needs Android 12 or newer.</string>
+    <string name="model_hint">ECMWF 9 km is the most accurate for Croatia overall. Yr uses MET Norway\'s forecast (ECMWF-based here, with their own post-processing).</string>
+    <string name="live_data">Live data</string>
+    <string name="stations_hint">Shows the temperature measured right now by the nearest DHMZ station (within 15 km).</string>
+    <string name="units">Units</string>
+    <string name="temperature">Temperature</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="knots">knots</string>
+    <string name="refresh_every">Refresh every</string>
+    <string name="minutes">%1$d min</string>
+    <string name="refresh_hint">Android may delay updates to save battery.</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="updated_at">Updated %1$s</string>
+    <string name="wc_sleet">Sleet</string>
+    <string name="date_format" translatable="false">EEEE, MMMM d</string>
+    <string name="short_date_format" translatable="false">MMM d</string>
+    <string-array name="clock_fonts"><item>Thin</item><item>Light</item><item>Regular</item><item>Bold</item></string-array>
+    <string-array name="corner_names"><item>Square</item><item>Small</item><item>Round</item><item>Extra round</item></string-array>
 </resources>
