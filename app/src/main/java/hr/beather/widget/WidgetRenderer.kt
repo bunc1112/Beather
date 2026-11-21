@@ -122,6 +122,13 @@ object WidgetRenderer {
         v.setInt(R.id.bg, "setColorFilter", if (p.skyBackground) 0 else (p.bgColor or 0xFF000000.toInt()))
         v.setInt(R.id.bg, "setImageAlpha", p.opacity * 255 / 100)
 
+        // ---- Vertical position of the content inside the widget ----
+        v.setInt(R.id.content, "setGravity", when (p.vAlign) {
+            1 -> Gravity.CENTER_VERTICAL
+            2 -> Gravity.BOTTOM
+            else -> Gravity.TOP
+        })
+
         // ---- Colours & sizes ----
         val primary = p.textColor or 0xFF000000.toInt()
         val secondary = (primary and 0x00FFFFFF) or 0xB3000000.toInt()

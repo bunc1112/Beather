@@ -154,4 +154,6 @@
     <string name="open_settings">Otvori postavke</string>
     <string name="downloading">Preuzimanje… %1$d%%</string>
     <string name="show_shared_calendars">Prikaži dijeljene kalendare (%1$d)</string>
+    <string name="position">Položaj u widgetu</string>
+    <string-array name="positions"><item>Gore</item><item>Sredina</item><item>Dolje</item></string-array>
 </resources>

@@ -132,6 +132,8 @@ class WidgetConfigActivity : AppCompatActivity() {
 
         // ---- Content ----
         ui.section(getString(R.string.cfg_show))
+        ui.label(getString(R.string.position))
+        ui.choice(resources.getStringArray(R.array.positions).toList(), p.vAlign) { i -> update { copy(vAlign = i) } }
         ui.switch(getString(R.string.show_location), p.showLocation) { on -> update { copy(showLocation = on) } }
         ui.switch(getString(R.string.show_clock), p.showClock) { on -> update { copy(showClock = on) } }
         ui.switch(getString(R.string.show_date), p.showDate) { on -> update { copy(showDate = on) } }

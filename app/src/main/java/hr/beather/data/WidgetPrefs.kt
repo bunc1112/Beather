@@ -21,6 +21,7 @@ data class WidgetPrefs(
     val calDays: Int = 7,       // look ahead 1..14 days
     val calEvents: Int = 1,     // events per row 1..3
     val clockFont: Int = 0,     // 0 thin, 1 light, 2 regular, 3 bold
+    val vAlign: Int = 0,        // 0 top, 1 center, 2 bottom
     // Background
     val skyBackground: Boolean = false,   // true = blue day / navy night gradient
     val bgColor: Int = 0xFF000000.toInt(),
@@ -39,7 +40,7 @@ data class WidgetPrefs(
         .put("desc", showDescription).put("details", showDetails).put("hourly", showHourly)
         .put("daysOn", showDays).put("updated", showUpdated).put("source", showSource)
         .put("days", days).put("gcal", showGoogle).put("ocal", showOutlook)
-        .put("calDays", calDays).put("calEvents", calEvents).put("font", clockFont).put("sky", skyBackground).put("bg", bgColor)
+        .put("calDays", calDays).put("calEvents", calEvents).put("font", clockFont).put("valign", vAlign).put("sky", skyBackground).put("bg", bgColor)
         .put("opacity", opacity).put("corner", corner).put("text", textColor).put("accent", accentColor)
         .put("tscale", textScale).put("iscale", iconScale).put("clockAlarms", clockOpensAlarms)
         .toString()
@@ -79,6 +80,7 @@ data class WidgetPrefs(
                 calDays = o.optInt("calDays", d.calDays).coerceIn(1, 14),
                 calEvents = o.optInt("calEvents", d.calEvents).coerceIn(1, 3),
                 clockFont = o.optInt("font", d.clockFont).coerceIn(0, 3),
+                vAlign = o.optInt("valign", d.vAlign).coerceIn(0, 2),
                 skyBackground = o.optBoolean("sky", d.skyBackground),
                 bgColor = o.optInt("bg", d.bgColor),
                 opacity = o.optInt("opacity", d.opacity).coerceIn(0, 100),

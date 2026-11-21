@@ -156,4 +156,6 @@
     <string name="open_settings">Open settings</string>
     <string name="downloading">Downloading… %1$d%%</string>
     <string name="show_shared_calendars">Show shared calendars (%1$d)</string>
+    <string name="position">Position in widget</string>
+    <string-array name="positions"><item>Top</item><item>Center</item><item>Bottom</item></string-array>
 </resources>
