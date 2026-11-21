@@ -187,8 +187,8 @@ class WidgetConfigActivity : AppCompatActivity() {
         ui.colors(UiKit.ACCENT_PALETTE, p.accentColor) { c -> update { copy(accentColor = c) } }
         ui.switch(getString(R.string.auto_fit), p.autoFit) { on -> update { copy(autoFit = on) } }
         ui.hint(getString(R.string.auto_fit_hint))
-        ui.slider(getString(R.string.text_size), 70, 150, 5, p.textScale, { "$it%" }) { v -> update { copy(textScale = v) } }
-        ui.slider(getString(R.string.icon_size), 60, 160, 10, p.iconScale, { "$it%" }) { v -> update { copy(iconScale = v) } }
+        ui.slider(getString(R.string.text_size), 30, 150, 5, p.textScale, { "$it%" }) { v -> update { copy(textScale = v) } }
+        ui.slider(getString(R.string.icon_size), 30, 160, 10, p.iconScale, { "$it%" }) { v -> update { copy(iconScale = v) } }
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) ui.hint(getString(R.string.icon_size_hint))
 
         options.addView(View(this), LinearLayout.LayoutParams(1, dp(24)))

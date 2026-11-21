@@ -30,8 +30,8 @@ data class WidgetPrefs(
     // Text & icons
     val textColor: Int = 0xFFFFFFFF.toInt(),
     val accentColor: Int = 0xFF90CAF9.toInt(),
-    val textScale: Int = 100,   // 70..150 %
-    val iconScale: Int = 100,   // 60..160 %
+    val textScale: Int = 100,   // 30..150 %
+    val iconScale: Int = 100,   // 30..160 %
     val autoFit: Boolean = true, // grow/shrink text & icons to fill the widget on any screen
     // Behaviour
     val clockOpensAlarms: Boolean = true,
@@ -88,8 +88,8 @@ data class WidgetPrefs(
                 corner = o.optInt("corner", d.corner).coerceIn(0, CORNERS.size - 1),
                 textColor = o.optInt("text", d.textColor),
                 accentColor = o.optInt("accent", d.accentColor),
-                textScale = o.optInt("tscale", d.textScale).coerceIn(70, 150),
-                iconScale = o.optInt("iscale", d.iconScale).coerceIn(60, 160),
+                textScale = o.optInt("tscale", d.textScale).coerceIn(30, 150),
+                iconScale = o.optInt("iscale", d.iconScale).coerceIn(30, 160),
                 autoFit = o.optBoolean("autofit", d.autoFit),
                 clockOpensAlarms = o.optBoolean("clockAlarms", d.clockOpensAlarms),
             )

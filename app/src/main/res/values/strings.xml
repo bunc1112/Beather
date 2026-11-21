@@ -159,5 +159,5 @@
     <string name="position">Position in widget</string>
     <string-array name="positions"><item>Top</item><item>Center</item><item>Bottom</item></string-array>
     <string name="auto_fit">Auto-fit to widget size</string>
-    <string name="auto_fit_hint">Text and icons grow or shrink to fill the widget, so it looks the same on every phone. The sliders below fine-tune on top of that.</string>
+    <string name="auto_fit_hint">Text and icons scale with the widget&#8217;s width, so it looks the same on every phone. The sliders below make everything bigger or smaller on top of that.</string>
 </resources>
