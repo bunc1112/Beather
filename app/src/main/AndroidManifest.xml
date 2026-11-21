@@ -37,6 +37,8 @@
         <activity
             android:name=".ui.ForecastActivity"
             android:exported="false"
+            android:taskAffinity="hr.beather.forecast"
+            android:autoRemoveFromRecents="true"
             android:theme="@style/Theme.Beather.Forecast" />
 
         <activity

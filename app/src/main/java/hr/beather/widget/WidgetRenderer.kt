@@ -311,7 +311,9 @@ object WidgetRenderer {
         else Intent(ctx, ForecastActivity::class.java)
             .putExtra(ForecastActivity.EXTRA_LOCATION, loc.id)
             .putExtra(ForecastActivity.EXTRA_DAY, day)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        // Widget taps open the forecast in its own task, so Back returns to the home screen
+        // (not into the Beather app). Inside the app it still opens on top of the list.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         return PendingIntent.getActivity(ctx, id * 16 + day + 1, intent, flags())
     }
 
