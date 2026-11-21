@@ -86,9 +86,8 @@ object WidgetRenderer {
 
         // Actual widget size on this phone (portrait: min width × max height, in dp).
         val o = mgr.getAppWidgetOptions(id)
-        val wDp = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-        val hDp = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-        val fit = if (prefs.autoFit) fitScale(ctx, prefs, wDp, hDp) else 1f
+        val wDp = widgetWidthDp(o)
+        val fit = if (prefs.autoFit) fitScale(wDp) else 1f
 
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // Android 12+: the launcher swaps layouts as the widget is resized.
@@ -99,34 +98,31 @@ object WidgetRenderer {
                 )
             )
         } else {
-            build(ctx, wDp in 1 until 200, id, loc, fc, prefs, fit)
+            build(ctx, o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) in 1 until 200, id, loc, fc, prefs, fit)
         }
         mgr.updateAppWidget(id, views)
     }
 
     /**
-     * Scale that makes the content fill the widget, so it looks the same on phones with
-     * different resolutions / display sizes. Compares the widget's real size with the size
-     * the enabled sections need at 100 %.
+     * Scale based on the widget's real width, so it looks proportionally the same on
+     * phones with different resolutions / display-size settings. Height is not used:
+     * a short widget should not shrink everything (resize it taller instead).
      */
-    private fun fitScale(ctx: Context, p: WidgetPrefs, wDp: Int, hDp: Int): Float {
-        if (wDp <= 0 || hDp <= 0) return 1f
-        if (wDp < 200) return (wDp / 150f).coerceIn(0.8f, 1.6f) // compact layout
-        var h = 28f // padding
-        if (p.showLocation || p.showAlarm || p.showUpdated) h += 24f
-        if (Calendars.hasPermission(ctx)) {
-            if (p.showGoogle) h += 22f
-            if (p.showOutlook) h += 22f
+    private fun fitScale(wDp: Int): Float {
+        if (wDp <= 0) return 1f
+        if (wDp < 200) return (wDp / 150f).coerceIn(0.9f, 1.6f) // compact layout
+        return (wDp / 360f).coerceIn(0.9f, 1.8f)
+    }
+
+    /** Widest size the launcher reports for this widget, in dp. */
+    @Suppress("DEPRECATION")
+    private fun widgetWidthDp(o: android.os.Bundle): Int {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val sizes = o.getParcelableArrayList<SizeF>(AppWidgetManager.OPTION_APPWIDGET_SIZES)
+            sizes?.maxOfOrNull { it.width }?.let { if (it > 0) return it.toInt() }
         }
-        h += maxOf(
-            (if (p.showClock) 72f else 0f) + (if (p.showDate) 24f else 0f),
-            64f + (if (p.showDescription) 26f else 0f),
-        )
-        if (p.showDetails) h += 22f
-        if (p.showHourly) h += 88f
-        if (p.showDays) h += 86f
-        if (p.showSource) h += 16f
-        return minOf(wDp / 340f, hDp / h).coerceIn(0.7f, 1.8f)
+        return maxOf(o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH), o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH))
+            .takeIf { it > 0 } ?: 0
     }
 
     /** Used by the widget settings screen for its live preview. */
