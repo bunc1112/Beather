@@ -32,6 +32,7 @@ data class WidgetPrefs(
     val accentColor: Int = 0xFF90CAF9.toInt(),
     val textScale: Int = 100,   // 70..150 %
     val iconScale: Int = 100,   // 60..160 %
+    val autoFit: Boolean = true, // grow/shrink text & icons to fill the widget on any screen
     // Behaviour
     val clockOpensAlarms: Boolean = true,
 ) {
@@ -42,7 +43,7 @@ data class WidgetPrefs(
         .put("days", days).put("gcal", showGoogle).put("ocal", showOutlook)
         .put("calDays", calDays).put("calEvents", calEvents).put("font", clockFont).put("valign", vAlign).put("sky", skyBackground).put("bg", bgColor)
         .put("opacity", opacity).put("corner", corner).put("text", textColor).put("accent", accentColor)
-        .put("tscale", textScale).put("iscale", iconScale).put("clockAlarms", clockOpensAlarms)
+        .put("tscale", textScale).put("iscale", iconScale).put("autofit", autoFit).put("clockAlarms", clockOpensAlarms)
         .toString()
 
     companion object {
@@ -89,6 +90,7 @@ data class WidgetPrefs(
                 accentColor = o.optInt("accent", d.accentColor),
                 textScale = o.optInt("tscale", d.textScale).coerceIn(70, 150),
                 iconScale = o.optInt("iscale", d.iconScale).coerceIn(60, 160),
+                autoFit = o.optBoolean("autofit", d.autoFit),
                 clockOpensAlarms = o.optBoolean("clockAlarms", d.clockOpensAlarms),
             )
         }

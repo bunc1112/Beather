@@ -156,4 +156,6 @@
     <string name="show_shared_calendars">Prikaži dijeljene kalendare (%1$d)</string>
     <string name="position">Položaj u widgetu</string>
     <string-array name="positions"><item>Gore</item><item>Sredina</item><item>Dolje</item></string-array>
+    <string name="auto_fit">Automatski prilagodi veličini widgeta</string>
+    <string name="auto_fit_hint">Tekst i ikone se povećavaju ili smanjuju da ispune widget, pa izgleda jednako na svakom mobitelu. Klizači ispod dodatno podešavaju.</string>
 </resources>

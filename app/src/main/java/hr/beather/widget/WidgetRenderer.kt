@@ -84,19 +84,49 @@ object WidgetRenderer {
         val fc = loc?.let { WeatherRepository.cached(ctx, it) }
         val prefs = Store.widgetPrefs(ctx, id)
 
+        // Actual widget size on this phone (portrait: min width × max height, in dp).
+        val o = mgr.getAppWidgetOptions(id)
+        val wDp = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
+        val hDp = o.getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
+        val fit = if (prefs.autoFit) fitScale(ctx, prefs, wDp, hDp) else 1f
+
         val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             // Android 12+: the launcher swaps layouts as the widget is resized.
             RemoteViews(
                 mapOf(
-                    SizeF(60f, 60f) to build(ctx, true, id, loc, fc, prefs),
-                    SizeF(200f, 100f) to build(ctx, false, id, loc, fc, prefs),
+                    SizeF(60f, 60f) to build(ctx, true, id, loc, fc, prefs, fit),
+                    SizeF(200f, 100f) to build(ctx, false, id, loc, fc, prefs, fit),
                 )
             )
         } else {
-            val w = mgr.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-            build(ctx, w in 1 until 200, id, loc, fc, prefs)
+            build(ctx, wDp in 1 until 200, id, loc, fc, prefs, fit)
         }
         mgr.updateAppWidget(id, views)
+    }
+
+    /**
+     * Scale that makes the content fill the widget, so it looks the same on phones with
+     * different resolutions / display sizes. Compares the widget's real size with the size
+     * the enabled sections need at 100 %.
+     */
+    private fun fitScale(ctx: Context, p: WidgetPrefs, wDp: Int, hDp: Int): Float {
+        if (wDp <= 0 || hDp <= 0) return 1f
+        if (wDp < 200) return (wDp / 150f).coerceIn(0.8f, 1.6f) // compact layout
+        var h = 28f // padding
+        if (p.showLocation || p.showAlarm || p.showUpdated) h += 24f
+        if (Calendars.hasPermission(ctx)) {
+            if (p.showGoogle) h += 22f
+            if (p.showOutlook) h += 22f
+        }
+        h += maxOf(
+            (if (p.showClock) 72f else 0f) + (if (p.showDate) 24f else 0f),
+            64f + (if (p.showDescription) 26f else 0f),
+        )
+        if (p.showDetails) h += 22f
+        if (p.showHourly) h += 88f
+        if (p.showDays) h += 86f
+        if (p.showSource) h += 16f
+        return minOf(wDp / 340f, hDp / h).coerceIn(0.7f, 1.8f)
     }
 
     /** Used by the widget settings screen for its live preview. */
@@ -107,6 +137,7 @@ object WidgetRenderer {
 
     private fun build(
         ctx: Context, compact: Boolean, id: Int, loc: SavedLocation?, fc: Forecast?, p: WidgetPrefs,
+        fit: Float = 1f,
     ): RemoteViews {
         val v = RemoteViews(ctx.packageName, if (compact) R.layout.widget_compact else R.layout.widget_main)
         val isDay = fc?.current?.isDay ?: true
@@ -132,7 +163,7 @@ object WidgetRenderer {
         // ---- Colours & sizes ----
         val primary = p.textColor or 0xFF000000.toInt()
         val secondary = (primary and 0x00FFFFFF) or 0xB3000000.toInt()
-        val scale = p.textScale / 100f
+        val scale = p.textScale / 100f * fit
         fun style(list: List<Pair<Int, Float>>, color: Int) = list.forEach { (vid, sp) ->
             v.setTextColor(vid, color)
             v.setTextViewTextSize(vid, TypedValue.COMPLEX_UNIT_SP, sp * scale)
@@ -146,7 +177,7 @@ object WidgetRenderer {
             v.setInt(R.id.refresh, "setColorFilter", primary)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val s = p.iconScale / 100f
+            val s = p.iconScale / 100f * fit
             fun size(vid: Int, dp: Float) {
                 v.setViewLayoutWidth(vid, dp * s, TypedValue.COMPLEX_UNIT_DIP)
                 v.setViewLayoutHeight(vid, dp * s, TypedValue.COMPLEX_UNIT_DIP)
