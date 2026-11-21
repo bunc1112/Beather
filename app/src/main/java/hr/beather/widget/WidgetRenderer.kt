@@ -73,6 +73,34 @@ object WidgetRenderer {
     private val COMPACT_PRIMARY = listOf(R.id.loc_name to 14f, R.id.cur_temp to 36f, R.id.cur_desc to 13f)
     private val COMPACT_SECONDARY = listOf(R.id.cur_hilo to 13f)
 
+    // Each icon is a slot holding several fixed sizes; the closest one to the wanted size is shown.
+    // Works on every Android version (resizing views in a widget needs Android 12+).
+    private val CUR_SIZES = floatArrayOf(40f, 52f, 64f, 80f, 100f, 124f)
+    private val DAY_SIZES = floatArrayOf(24f, 30f, 36f, 44f, 54f, 66f, 80f)
+    private val HOUR_SIZES = floatArrayOf(18f, 22f, 26f, 32f, 40f, 50f)
+    private val idCache = HashMap<String, Int>()
+
+    private fun rid(ctx: Context, name: String) =
+        idCache.getOrPut(name) { ctx.resources.getIdentifier(name, "id", ctx.packageName) }
+
+    private fun setIcon(ctx: Context, v: RemoteViews, slot: String, sizes: FloatArray, targetDp: Float, res: Int) {
+        val best = sizes.indices.minByOrNull { kotlin.math.abs(sizes[it] - targetDp) } ?: 0
+        for (k in sizes.indices) {
+            val id = rid(ctx, "${slot}_v$k")
+            if (id == 0) continue
+            if (k == best) {
+                v.setViewVisibility(id, View.VISIBLE)
+                v.setImageViewResource(id, res)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    v.setViewLayoutWidth(id, targetDp, TypedValue.COMPLEX_UNIT_DIP)
+                    v.setViewLayoutHeight(id, targetDp, TypedValue.COMPLEX_UNIT_DIP)
+                }
+            } else {
+                v.setViewVisibility(id, View.GONE)
+            }
+        }
+    }
+
     fun updateAll(ctx: Context) {
         val mgr = AppWidgetManager.getInstance(ctx)
         mgr.getAppWidgetIds(ComponentName(ctx, BeatherWidgetProvider::class.java))
@@ -172,18 +200,7 @@ object WidgetRenderer {
             v.setInt(R.id.alarm_icon, "setColorFilter", primary)
             v.setInt(R.id.refresh, "setColorFilter", primary)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            val s = p.iconScale / 100f * fit
-            fun size(vid: Int, dp: Float) {
-                v.setViewLayoutWidth(vid, dp * s, TypedValue.COMPLEX_UNIT_DIP)
-                v.setViewLayoutHeight(vid, dp * s, TypedValue.COMPLEX_UNIT_DIP)
-            }
-            if (compact) size(R.id.cur_icon, 46f) else {
-                size(R.id.cur_icon, 64f)
-                DAY_ICON.forEach { size(it, 40f) }
-                HOUR_ICON.forEach { size(it, 30f) }
-            }
-        }
+        val iconF = p.iconScale / 100f * fit
 
         // ---- Clicks ----
         v.setOnClickPendingIntent(R.id.root, openForecast(ctx, id, loc, 0))
@@ -194,23 +211,23 @@ object WidgetRenderer {
         }
 
         v.setTextViewText(R.id.loc_name, loc?.name ?: ctx.getString(R.string.no_location))
-        return if (compact) fillCompact(ctx, v, fc) else fillMain(ctx, v, id, loc, fc, p)
+        return if (compact) fillCompact(ctx, v, fc, iconF) else fillMain(ctx, v, id, loc, fc, p, iconF)
     }
 
-    private fun fillCompact(ctx: Context, v: RemoteViews, fc: Forecast?): RemoteViews {
+    private fun fillCompact(ctx: Context, v: RemoteViews, fc: Forecast?, iconF: Float): RemoteViews {
         if (fc == null) {
             v.setTextViewText(R.id.cur_desc, ctx.getString(R.string.loading)); return v
         }
         val c = fc.current
         val today = fc.upcomingDays().firstOrNull()
-        v.setImageViewResource(R.id.cur_icon, WeatherCodes.icon(c.code, c.isDay))
+        setIcon(ctx, v, "cur_icon", CUR_SIZES, 52f * iconF, WeatherCodes.icon(c.code, c.isDay))
         v.setTextViewText(R.id.cur_temp, deg(c.temp))
         v.setTextViewText(R.id.cur_desc, WeatherCodes.describe(ctx, c.code))
         v.setTextViewText(R.id.cur_hilo, today?.let { "↑${deg(it.max)}  ↓${deg(it.min)}" } ?: "")
         return v
     }
 
-    private fun fillMain(ctx: Context, v: RemoteViews, id: Int, loc: SavedLocation?, fc: Forecast?, p: WidgetPrefs): RemoteViews {
+    private fun fillMain(ctx: Context, v: RemoteViews, id: Int, loc: SavedLocation?, fc: Forecast?, p: WidgetPrefs, iconF: Float): RemoteViews {
         val locale = Locale.getDefault()
 
         // ---- Header: location · next alarm · updated · refresh ----
@@ -254,7 +271,7 @@ object WidgetRenderer {
         val c = fc.current
         val days = fc.upcomingDays()
         val today = days.firstOrNull()
-        v.setImageViewResource(R.id.cur_icon, WeatherCodes.icon(c.code, c.isDay))
+        setIcon(ctx, v, "cur_icon", CUR_SIZES, 64f * iconF, WeatherCodes.icon(c.code, c.isDay))
         v.setTextViewText(R.id.cur_temp, deg(c.temp))
         v.setTextViewText(R.id.cur_max, today?.let { deg(it.max) } ?: "")
         v.setTextViewText(R.id.cur_min, today?.let { deg(it.min) } ?: "")
@@ -283,7 +300,7 @@ object WidgetRenderer {
             }
             v.setViewVisibility(HOUR_ICON[i], View.VISIBLE)
             v.setTextViewText(HOUR_TIME[i], if (i == 0) ctx.getString(R.string.now) else "%02d".format(h.time.hour))
-            v.setImageViewResource(HOUR_ICON[i], WeatherCodes.icon(h.code, h.isDay))
+            setIcon(ctx, v, "h${i}_icon", HOUR_SIZES, 26f * iconF, WeatherCodes.icon(h.code, h.isDay))
             v.setTextViewText(HOUR_TEMP[i], deg(h.temp))
             v.setTextViewText(HOUR_POP[i], h.pop?.takeIf { it >= 20 }?.let { "$it%" } ?: "")
         }
@@ -295,7 +312,7 @@ object WidgetRenderer {
                 v.setViewVisibility(DAY_CELL[i], if (i < p.days) View.INVISIBLE else View.GONE); continue
             }
             v.setTextViewText(DAY_NAME[i], d.date.dayOfWeek.getDisplayName(TextStyle.SHORT, locale).uppercase(locale).trimEnd('.'))
-            v.setImageViewResource(DAY_ICON[i], WeatherCodes.icon(d.code, true))
+            setIcon(ctx, v, "d${i}_icon", DAY_SIZES, 44f * iconF, WeatherCodes.icon(d.code, true))
             v.setTextViewText(DAY_TEMP[i], "${deg(d.max)}/${deg(d.min)}")
         }
 

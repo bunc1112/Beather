@@ -189,7 +189,6 @@ class WidgetConfigActivity : AppCompatActivity() {
         ui.hint(getString(R.string.auto_fit_hint))
         ui.slider(getString(R.string.text_size), 30, 150, 5, p.textScale, { "$it%" }) { v -> update { copy(textScale = v) } }
         ui.slider(getString(R.string.icon_size), 30, 160, 10, p.iconScale, { "$it%" }) { v -> update { copy(iconScale = v) } }
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.S) ui.hint(getString(R.string.icon_size_hint))
 
         options.addView(View(this), LinearLayout.LayoutParams(1, dp(24)))
     }
